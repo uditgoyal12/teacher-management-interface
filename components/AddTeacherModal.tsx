@@ -19,7 +19,13 @@ export default function AddTeacherModal({
   onUpdate,
   onClose,
 }: Props) {
-  const [form, setForm] = useState<Teacher>({ name: "", subject: "", email: "" });
+  const [form, setForm] = useState<Teacher>({
+    id: "", // required to satisfy Teacher type
+    name: "",
+    subject: "",
+    email: "",
+    phone: "", // required to satisfy Teacher type
+  });
 
   useEffect(() => {
     if (editingTeacher) setForm(editingTeacher);
@@ -30,16 +36,18 @@ export default function AddTeacherModal({
   };
 
   const handleSubmit = () => {
-    if (!form.name || !form.subject || !form.email) return alert("Fill all fields");
+    if (!form.name || !form.subject || !form.email) {
+      return alert("Please fill all required fields");
+    }
 
     editingTeacher ? onUpdate(form) : onAdd(form);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm">
+      <div className="w-full max-w-md p-6 bg-white rounded-lg">
+        <h2 className="mb-4 text-xl font-bold">
           {editingTeacher ? "Edit Teacher" : "Add Teacher"}
         </h2>
 
@@ -74,9 +82,19 @@ export default function AddTeacherModal({
               placeholder="e.g. rohan@school.edu"
             />
           </div>
+          <div>
+            <Label htmlFor="phone">Phone</Label>
+            <Input
+              id="phone"
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder="e.g. 9876543210"
+            />
+          </div>
         </div>
 
-        <div className="mt-6 flex justify-end gap-2">
+        <div className="flex justify-end gap-2 mt-6">
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
